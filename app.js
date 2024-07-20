@@ -1,7 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const Blog = require('./models/blog');
+//const Blog = require('./models/blog');
+//const Course = require('./models/course');
+const blogRoutes = require('./routes/blogRoutes');
 
 //express app
 const app = express();
@@ -54,7 +56,26 @@ app.get('/add-blog', (req, res) => {
             console.log(err);
         });
 });
+*/
 
+/*
+app.get('/add-course', (req, res) => {
+    const course = new Course({
+        course_title: 'new blog 2',
+        course_number: 'about my new blog',
+        course_description: 'more about my new blog'
+    });
+
+    course.save()
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+*/
+/*
 app.get('/all-blogs', (req, res) => {
     Blog.find()
     .then((result) => {
@@ -96,6 +117,9 @@ app.get('/about', (req, res) => {
 
 //blog routes
 
+app.use('/blogs', blogRoutes);
+
+/*
 app.get('/blogs', (req, res) => {
     Blog.find().sort({ createdAt: -1 })
         .then((result) => {
@@ -144,7 +168,7 @@ app.delete('/blogs/:id', (req, res) => {
 app.get('/blogs/create', (req, res) => {
     res.render('create.ejs', { title: 'Create a new blog'});
 });
-
+*/
 app.get('/about-us', (req, res) => {
     res.redirect('/about');
 
