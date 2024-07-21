@@ -4,13 +4,16 @@ const mongoose = require('mongoose');
 //const Blog = require('./models/blog');
 //const Course = require('./models/course');
 const blogRoutes = require('./routes/blogRoutes');
+const authRoutes = require('./routes/authRoutes');
+const cookieParser = require('cookie-parser');
+const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 
 //express app
 const app = express();
 
 // connect to mongodb
 const dbURI = 'mongodb+srv://netninja:SDEV255@nodetutscluster.o0leayf.mongodb.net/nodetutscluster';
-//mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true });
 mongoose.connect(dbURI)
     .then((result) => app.listen(3000))
     .catch((err) => console.log(err));
@@ -25,6 +28,8 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true}));
 app.use(morgan('dev'));
+app.use(express.json());
+app.use(cookieParser());
 
 //app.use((req, res, next) => {
     //console.log('new request made: ');
@@ -114,6 +119,32 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about.ejs', { title: 'About'});
 });
+
+//routes for smoothie JWT Node Auth Tutorial
+app.get('*', checkUser);
+app.get('/homeJWT', (req, res) => res.render('homeJWT'));
+app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
+app.use(authRoutes);
+
+//cookies
+/*
+app.get('/set-cookies', (req, res) => {
+    //res.setHeader('Set-Cookie', 'newUser=true');
+    res.cookie('newUser', false);
+    res.cookie('isEmployee', true, {maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+
+    res.send('you got the cookies!');
+});
+
+app.get('/read-cookies', (req, res) => {
+
+    const cookies = req.cookies;
+    console.log(cookies.newUser);
+
+    res.json(cookies);
+
+});
+*/
 
 //blog routes
 
